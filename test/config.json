@@ -1,6 +1,21 @@
 {
   "local": {
     "baseURL": "http://127.0.0.1:8080",
-    "active": true
+    "active": true,
+    "user1": {
+      "username": "user1",
+      "password": 1111,
+      "email": "user1@smava.de"
+    },
+    "user2": {
+      "username": "user2",
+      "password": 2222,
+      "email": "user2@smava.de"
+    },
+    "user3": {
+      "username": "user3",
+      "password": 3333,
+      "email": "user3@smava.de"
+    }
   }
 }
