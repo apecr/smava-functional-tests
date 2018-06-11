@@ -43,18 +43,18 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
       });
       describe('# GET /rest/users/{username}/accounts', () => {
         it('Should get the accounts from user2 with the admin role', () => {
-          return chai.request(`${envProperties.baseURL}/rest/users/user3`)
+          return chai.request(`${envProperties.baseURL}/rest/users/user2`)
             .get('/accounts')
             .set('Cookie', cookies[0])
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .then(response => {
-              expect(response.body).to.be.json;
-              console.log(JSON.stringify(response.body, undefined, 2));
+              expect(response.body).to.have.length(1);
+              expect(response.body[0].iban).to.be.equal('TESTIBAN0');
             });
         });
-        it('Should get the accounts from user3 with the user role. Not allowed', () => {
-          return chai.request(`${envProperties.baseURL}/rest/users/user3`)
+        it('Should get the accounts from user2 with the user role. Not allowed', () => {
+          return chai.request(`${envProperties.baseURL}/rest/users/user2`)
             .get('/accounts')
             .set('Cookie', cookies[2])
             .set('Accept', 'application/json')
