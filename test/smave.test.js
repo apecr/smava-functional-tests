@@ -81,7 +81,7 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
       describe('# POST /rest/accounts', () => {
         it('Should create an account with the admin user for the user3', () => {
           const bankAccountUser3 = {
-            iban: 'IBAN3',
+            iban: 'IBAN5',
             bic: 'BIC3',
             appUser: {
               username: user3.username,
