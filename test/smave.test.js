@@ -29,15 +29,39 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
           cookies = responses.map(response => response.headers['set-cookie'][0].split(';')[0]);
         });
     });
-    describe('# GET /rest/users', () => {
-      it('Should get the users with the admin role', () => {
-        return chai.request(`${envProperties.baseURL}/rest`)
-          .get('/users')
-          .set('Cookie', cookies[0])
-          .then(response => {
-            expect(response).to.have.status(200);
-            expect(response.body).to.have.length(3);
-          });
+    describe('/rest/users endpoints', () => {
+      describe('# GET /rest/users', () => {
+        it('Should get the users with the admin role', () => {
+          return chai.request(`${envProperties.baseURL}/rest`)
+            .get('/users')
+            .set('Cookie', cookies[0])
+            .then(response => {
+              expect(response).to.have.status(200);
+              expect(response.body).to.have.length(3);
+            });
+        });
+      });
+      describe('# GET /rest/users/{username}/accounts', () => {
+        it('Should get the accounts from user2 with the admin role', () => {
+          return chai.request(`${envProperties.baseURL}/rest/users/user3`)
+            .get('/accounts')
+            .set('Cookie', cookies[0])
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .then(response => {
+              expect(response.body).to.be.json;
+              console.log(JSON.stringify(response.body, undefined, 2));
+            });
+        });
+        it('Should get the accounts from user3 with the user role. Not allowed', () => {
+          return chai.request(`${envProperties.baseURL}/rest/users/user3`)
+            .get('/accounts')
+            .set('Cookie', cookies[2])
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .then(response => Promise.reject('Should be an error'))
+            .catch(error => expect(error).to.have.status(401));
+        });
       });
     });
     describe('/rest/accounts endpoints', () => {
@@ -53,7 +77,7 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
         it('Should get the bank account of the user2', () => {
           return getAccountFromUser(cookies[1])
             .then(response => {
-            expect(response).to.be.json; //eslint-disable-line
+              expect(response).to.be.json;
               expect(response.body).to.be.deep.equal([ {
                 iban: 'TESTIBAN0',
                 bic: 'TESTBIC0',
@@ -68,7 +92,8 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
         it('Should get the zero bank accounts of the user3', () => {
           return getAccountFromUser(cookies[2])
             .then(response => {
-            expect(response).to.be.json; //eslint-disable-line
+              expect(response).to.be.json;
+
             //expect(response.body).to.have.length(0);
             });
         });
