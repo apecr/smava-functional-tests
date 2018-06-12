@@ -2,6 +2,7 @@ const expect = require('chai').expect;
 const chaiHttp = require('chai-http');
 const chai = require('chai');
 const _ = require('lodash');
+const randromstring = require('randomstring');
 
 const config = require('./config.json');
 
@@ -106,7 +107,7 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
       describe('# POST /rest/accounts', () => {
         it('Should create an account with the admin user for the user3', () => {
           const bankAccountUser3 = {
-            iban: 'IBAN_USER3',
+            iban: randromstring.generate(),
             bic: 'BIC3',
             appUser: {
               username: user3.username,
@@ -122,7 +123,8 @@ Object.keys(config).filter(env => config[env].active).forEach(environment => {
               expect(response.body.iban).to.be.equal(bankAccountUser3.iban);
               return getAccountFromUser(cookies[2])
                 .then(responseGet => {
-                  expect(responseGet.body.filter(account => account.iban === bankAccountUser3.iban)).to.have.length(1);
+                  expect(responseGet.body.filter(account => account.iban === bankAccountUser3.iban))
+                    .to.have.length(1);
                 });
             });
         });
